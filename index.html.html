@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Móvil de Inventario Inteligente - Hospital Metropolitano SSNL</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 1400px;
+            background: #ffffff;
+            border-radius: 25px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide {
+            min-height: 100vh;
+            padding: 80px;
+            display: none;
+            animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            color: white;
+            padding: 40px;
+            margin: -80px -80px 50px -80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: white;
+            position: relative;
+            z-index: 1;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #2c5364;
+            margin-bottom: 40px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid #00d2ff;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #3a7bd5;
+            margin: 40px 0 25px 0;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 600px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 35px;
+            padding: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin: 40px auto;
+            position: relative;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            margin: -20px -20px 20px -20px;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .feature-demo {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,210,255,0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .feature-title {
+            font-size: 1.4em;
+            color: #2c5364;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .feature-desc {
+            color: #546e7a;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .tech-icon {
+            font-size: 2em;
+        }
+
+        .workflow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 40px 0;
+            position: relative;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .workflow-step {
+            flex: 1;
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            position: relative;
+            min-width: 200px;
+            transition: transform 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            transform: scale(1.05);
+        }
+
+        .workflow-step::after {
+            content: '→';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2em;
+            color: #667eea;
+            z-index: 1;
+        }
+
+        .workflow-step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: white;
+            color: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .step-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .step-desc {
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .demo-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px;
+            border-radius: 25px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-section::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0,210,255,0.2) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .benefit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 5px solid #00d2ff;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .benefit-title {
+            color: #2c5364;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .benefit-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefit-list li {
+            padding: 10px 0;
+            color: #546e7a;
+            position: relative;
+            padding-left: 30px;
+            line-height: 1.6;
+        }
+
+        .benefit-list li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00d2ff;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 25px;
+            margin: 40px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .highlight-box p {
+            font-size: 1.2em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn:disabled {
+            background: linear-gradient(135deg, #cfd8dc 0%, #90a4ae 100%);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .slide-indicator {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .scanner-animation {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            position: relative;
+            border: 3px solid #00d2ff;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .scanner-line {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, #00d2ff 50%, transparent 100%);
+            position: absolute;
+            top: 0;
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            from { top: 0; }
+            to { top: 100%; }
+        }
+
+        .device-showcase {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .device-card {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .device-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .device-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .device-name {
+            font-size: 1.3em;
+            color: #2c5364;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .device-desc {
+            color: #546e7a;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 20px;
+            }
+            
+            .header {
+                margin: -40px -20px 30px -20px;
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            .workflow-step::after {
+                display: none;
+            }
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin: 40px 0;
+        }
+
+        .logo-placeholder {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-indicator" id="slideIndicator">Diapositiva 1 de 10</div>
+        
+        <!-- Slide 1: Portada -->
+        <div class="slide active">
+            <div class="header">
+                <h1>Sistema de Inventario Inteligente</h1>
+                <p class="subtitle">App Móvil con Tecnología de Escaneo Avanzado</p>
+                <p class="subtitle">Hospital Metropolitano - SSNL</p>
+            </div>
+            
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="app-header">
+                        📱 SSNL Inventory Pro
+                    </div>
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 4em; margin: 20px 0;">📷</div>
+                        <div style="font-size: 1.2em; color: #2c5364; font-weight: bold; margin-bottom: 20px;">Escaneo Inteligente</div>
+                        <div style="background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%); color: white; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                            Código QR Detectado
+                        </div>
+                        <div style="margin-top: 30px;">
+                            <div style="background: #f5f7fa; padding: 10px; border-radius: 10px; margin: 5px 0;">
+                                ✓ Ubicación registrada
+                            </div>
+                            <div style="background: #f5f7fa; padding: 10px; border-radius: 10px; margin: 5px 0;">
+                                ✓ Foto capturada
+                            </div>
+                            <div style="background: #f5f7fa; padding: 10px; border-radius: 10px; margin: 5px 0;">
+                                ✓ Sincronizado
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Transformación Digital del Proceso de Inventario</h3>
+                <p>Revolucionando la forma de gestionar y controlar los bienes del hospital mediante tecnología móvil de vanguardia</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Estado Actual -->
+        <div class="slide">
+            <h2>Estado Actual del Inventario</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card" style="background: linear-gradient(135deg, #2196f3 0%, #03a9f4 100%);">
+                    <div class="stat-number">10,831</div>
+                    <div class="stat-label">Bienes muebles registrados (Sep 2025)</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);">
+                    <div class="stat-number">55+</div>
+                    <div class="stat-label">Usuarios responsables (por validar)</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);">
+                    <div class="stat-number">???</div>
+                    <div class="stat-label">Bienes no reconocidos/sin regularizar</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);">
+                    <div class="stat-number">Múltiple</div>
+                    <div class="stat-label">Tipos: Donados, Abandonados, Personales</div>
+                </div>
+            </div>
+            
+            <h3>Categorías de Bienes a Inventariar</h3>
+            <div class="benefit-grid">
+                <div class="benefit-card">
+                    <div class="benefit-title">📋 Bienes Registrados</div>
+                    <ul class="benefit-list">
+                        <li>10,831 bienes con número de inventario</li>
+                        <li>Distribuidos en 55+ usuarios</li>
+                        <li>Datos por actualizar y corroborar</li>
+                        <li>Ubicaciones por validar</li>
+                    </ul>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-title">⚠️ Bienes Sin Regularizar</div>
+                    <ul class="benefit-list">
+                        <li>Bienes no reconocidos en sistema</li>
+                        <li>Bienes donados sin registro</li>
+                        <li>Bienes abandonados</li>
+                        <li>Bienes de origen personal</li>
+                    </ul>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-title">🔄 Desafíos Actuales</div>
+                    <ul class="benefit-list">
+                        <li>Información desactualizada</li>
+                        <li>Responsables incorrectos</li>
+                        <li>Ubicaciones no precisas</li>
+                        <li>Falta de evidencia fotográfica</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: La Solución -->
+        <div class="slide">
+            <h2>La Solución: App de Inventario Inteligente</h2>
+            
+            <div class="feature-demo">
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">App Móvil Nativa</div>
+                    <div class="feature-desc">
+                        Aplicación profesional para iOS y Android con interfaz intuitiva, 
+                        funcionamiento offline y sincronización automática cuando hay conexión.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-title">Escaneo Múltiple</div>
+                    <div class="feature-desc">
+                        Lectura instantánea de códigos de barras, QR codes y tecnología NFC. 
+                        Procesamiento batch para múltiples items.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📸</div>
+                    <div class="feature-title">Evidencia Fotográfica</div>
+                    <div class="feature-desc">
+                        Captura automática de fotografías de cada bien con marca de tiempo 
+                        y metadatos embebidos para auditoría.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scanner-animation">
+                <div class="scanner-line"></div>
+                <div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 4em;">
+                    📦
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Tecnología que Revoluciona el Proceso</h3>
+                <p>Reducción del 85% en tiempo de inventario • Precisión del 99.9% • Actualización en tiempo real</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Características Técnicas -->
+        <div class="slide">
+            <h2>Características Técnicas Avanzadas</h2>
+            
+            <div class="demo-section">
+                <h3 style="text-align: center; margin-bottom: 40px;">🚀 Funcionalidades Core</h3>
+                
+                <div class="workflow-container">
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Escaneo</div>
+                        <div class="step-desc">Lectura instantánea de códigos</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Validación</div>
+                        <div class="step-desc">Verificación automática de datos</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Geolocalización</div>
+                        <div class="step-desc">Registro de ubicación GPS</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Evidencia</div>
+                        <div class="step-desc">Captura fotográfica HD</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">5</div>
+                        <div class="step-title">Sincronización</div>
+                        <div class="step-desc">Actualización en la nube</div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Capacidades Técnicas</h3>
+            <div class="benefit-grid">
+                <div class="benefit-card">
+                    <div class="benefit-title">⚡ Alto Rendimiento</div>
+                    <ul class="benefit-list">
+                        <li>Escaneo en menos de 0.5 segundos</li>
+                        <li>Procesamiento de 500+ items/hora</li>
+                        <li>Caché local para 10,000 registros</li>
+                        <li>Compresión inteligente de imágenes</li>
+                    </ul>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-title">🔒 Seguridad Robusta</div>
+                    <ul class="benefit-list">
+                        <li>Encriptación AES-256</li>
+                        <li>Autenticación biométrica</li>
+                        <li>Logs de auditoría completos</li>
+                        <li>Respaldo automático cada 5 min</li>
+                    </ul>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-title">🌐 Conectividad Inteligente</div>
+                    <ul class="benefit-list">
+                        <li>Modo offline completo</li>
+                        <li>Sincronización diferencial</li>
+                        <li>Priorización de ancho de banda</li>
+                        <li>APIs RESTful para integración</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Dispositivos y Hardware -->
+        <div class="slide">
+            <h2>Ecosistema de Dispositivos</h2>
+            
+            <div class="device-showcase">
+                <div class="device-card">
+                    <div class="device-icon">📱</div>
+                    <div class="device-name">Smartphone Industrial</div>
+                    <div class="device-desc">
+                        Zebra TC52x<br>
+                        Android Enterprise<br>
+                        Scanner láser integrado<br>
+                        Batería 4,300 mAh<br>
+                        IP67 - Resistente a caídas
+                    </div>
+                </div>
+                <div class="device-card">
+                    <div class="device-icon">🔫</div>
+                    <div class="device-name">Scanner Profesional</div>
+                    <div class="device-desc">
+                        Honeywell Xenon 1952g<br>
+                        Bluetooth 5.0<br>
+                        Lee códigos dañados<br>
+                        Alcance 10 metros<br>
+                        7 días de batería
+                    </div>
+                </div>
+                <div class="device-card">
+                    <div class="device-icon">🏷️</div>
+                    <div class="device-name">Etiquetas Inteligentes</div>
+                    <div class="device-desc">
+                        QR + NFC híbridas<br>
+                        Resistentes a UV<br>
+                        Adhesivo industrial<br>
+                        Información dual<br>
+                        10 años de durabilidad
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Stack Tecnológico</h3>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <span class="tech-icon">⚛️</span>
+                    <span>React Native</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🔷</span>
+                    <span>TypeScript</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">☁️</span>
+                    <span>AWS Cloud</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🗄️</span>
+                    <span>PostgreSQL</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🔐</span>
+                    <span>OAuth 2.0</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">📊</span>
+                    <span>Power BI</span>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Hardware de Grado Empresarial</h3>
+                <p>Dispositivos certificados para uso hospitalario con garantía extendida y soporte 24/7</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Tipos de Ejecución -->
+        <div class="slide">
+            <h2>Tipos de Ejecución del Inventario</h2>
+            
+            <div class="demo-section">
+                <h3 style="text-align: center;">Estrategias de Levantamiento según Volumen</h3>
+                
+                <div class="stats-grid" style="margin-top: 40px;">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Inventario Total<br>
+                        <span style="font-size: 0.7em;">Áreas críticas y equipos médicos de alto valor</span></div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #00bcd4 0%, #00acc1 100%);">
+                        <div class="stat-number">30%</div>
+                        <div class="stat-label">Muestreo Estadístico<br>
+                        <span style="font-size: 0.7em;">Mobiliario general y equipo administrativo</span></div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%);">
+                        <div class="stat-number">10%</div>
+                        <div class="stat-label">Verificación Rápida<br>
+                        <span style="font-size: 0.7em;">Bienes de bajo valor o consumibles</span></div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #9c27b0 0%, #ab47bc 100%);">
+                        <div class="stat-number">Mixto</div>
+                        <div class="stat-label">Estrategia Combinada<br>
+                        <span style="font-size: 0.7em;">Según criticidad y valor del área</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Tiempos Estimados por Estrategia</h3>
+            <div style="background: white; padding: 30px; border-radius: 20px; margin: 30px 0;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%); color: white;">
+                            <th style="padding: 15px; text-align: left;">Tipo de Inventario</th>
+                            <th style="padding: 15px; text-align: center;">Bienes a Procesar</th>
+                            <th style="padding: 15px; text-align: center;">Tiempo Estimado</th>
+                            <th style="padding: 15px; text-align: center;">Personal Requerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #e0e0e0;">
+                            <td style="padding: 15px;">100% Total</td>
+                            <td style="padding: 15px; text-align: center;">~3,000 bienes</td>
+                            <td style="padding: 15px; text-align: center;">5-7 días</td>
+                            <td style="padding: 15px; text-align: center;">2-3 personas</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #e0e0e0;">
+                            <td style="padding: 15px;">30% Muestreo</td>
+                            <td style="padding: 15px; text-align: center;">~5,000 bienes</td>
+                            <td style="padding: 15px; text-align: center;">3-4 días</td>
+                            <td style="padding: 15px; text-align: center;">2 personas</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #e0e0e0;">
+                            <td style="padding: 15px;">10% Verificación</td>
+                            <td style="padding: 15px; text-align: center;">~2,800 bienes</td>
+                            <td style="padding: 15px; text-align: center;">1-2 días</td>
+                            <td style="padding: 15px; text-align: center;">1-2 personas</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px; font-weight: bold;">TOTAL HOSPITAL</td>
+                            <td style="padding: 15px; text-align: center; font-weight: bold;">10,831+ bienes</td>
+                            <td style="padding: 15px; text-align: center; font-weight: bold;">10-15 días</td>
+                            <td style="padding: 15px; text-align: center; font-weight: bold;">2-3 personas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Flexibilidad según Necesidades</h3>
+                <p>La estrategia se ajusta según: criticidad del área, valor de los bienes, requerimientos de auditoría y disponibilidad operativa</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Características Diferenciadoras -->
+        <div class="slide">
+            <h2>Características Diferenciadoras</h2>
+            
+            <div class="feature-demo">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Análisis Post-Inventario</div>
+                    <div class="feature-desc">
+                        Una vez completado el levantamiento, el sistema permitirá análisis avanzados,
+                        detección de patrones y optimización de la distribución de bienes.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📍</div>
+                    <div class="feature-title">Gestión de Ubicaciones</div>
+                    <div class="feature-desc">
+                        Mapeo completo de todas las áreas del hospital, asignación precisa
+                        de bienes por piso, departamento y área específica.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔔</div>
+                    <div class="feature-title">Alertas y Notificaciones</div>
+                    <div class="feature-desc">
+                        Sistema de alertas para bienes sin responsable, ubicaciones duplicadas,
+                        inconsistencias detectadas y seguimiento de regularización.
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Panel de Control en Tiempo Real</h3>
+            <div class="demo-section">
+                <div style="text-align: center;">
+                    <div style="background: white; padding: 30px; border-radius: 20px; display: inline-block;">
+                        <h4 style="color: #2c5364; margin-bottom: 20px;">Dashboard de Progreso</h4>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                            <div style="background: #f5f7fa; padding: 20px; border-radius: 10px;">
+                                <div style="font-size: 2em; color: #00d2ff;">10,831</div>
+                                <div style="color: #546e7a;">Bienes Registrados</div>
+                            </div>
+                            <div style="background: #f5f7fa; padding: 20px; border-radius: 10px;">
+                                <div style="font-size: 2em; color: #ff9800;">55</div>
+                                <div style="color: #546e7a;">Usuarios</div>
+                            </div>
+                            <div style="background: #f5f7fa; padding: 20px; border-radius: 10px;">
+                                <div style="font-size: 2em; color: #f44336;">Por definir</div>
+                                <div style="color: #546e7a;">Sin regularizar</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 30px;">
+                            <div style="background: linear-gradient(90deg, #4caf50 0%, #4caf50 10%, #e0e0e0 10%, #e0e0e0 100%); height: 30px; border-radius: 15px;"></div>
+                            <div style="color: #546e7a; margin-top: 10px;">Progreso del Inventario</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Inteligencia de Datos</h3>
+                <p>Limpieza y normalización de datos • Detección de inconsistencias • Reportes personalizables • Exportación múltiple</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Preparación para Implementación -->
+        <div class="slide">
+            <h2>Preparación para la Implementación</h2>
+            
+            <h3>Información Requerida para Iniciar</h3>
+            
+            <div class="benefit-grid">
+                <div class="benefit-card">
+                    <div class="benefit-title">📋 Datos del Inventario</div>
+                    <ul class="benefit-list">
+                        <li>Validación de 10,831 bienes registrados</li>
+                        <li>Actualización de ubicaciones físicas</li>
+                        <li>Corrección de responsables (55 usuarios)</li>
+                        <li>Identificación de bienes sin regularizar</li>
+                    </ul>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-title">👥 Equipo de Trabajo</div>
+                    <ul class="benefit-list">
+                        <li>Designación de enlace del proyecto</li>
+                        <li>Identificación de responsables por área</li>
+                        <li>Personal de apoyo para accesos</li>
+                        <li>Horarios disponibles para inventario</li>
+                    </ul>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-title">🏥 Accesos y Logística</div>
+                    <ul class="benefit-list">
+                        <li>Permisos de acceso a todas las áreas</li>
+                        <li>Mapeo de zonas restringidas</li>
+                        <li>Calendario de disponibilidad</li>
+                        <li>Protocolos de seguridad del hospital</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Fases de Trabajo Inicial</h3>
+            <div class="workflow-container">
+                <div class="workflow-step" style="background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Análisis de Datos</div>
+                    <div class="step-desc">Revisión y limpieza del inventario actual</div>
+                </div>
+                <div class="workflow-step" style="background: linear-gradient(135deg, #2196f3 0%, #03a9f4 100%);">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Preparación</div>
+                    <div class="step-desc">Generación de etiquetas y configuración</div>
+                </div>
+                <div class="workflow-step" style="background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%);">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Capacitación</div>
+                    <div class="step-desc">Entrenamiento del personal designado</div>
+                </div>
+                <div class="workflow-step" style="background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Levantamiento</div>
+                    <div class="step-desc">Ejecución del inventario por áreas</div>
+                </div>
+                <div class="workflow-step" style="background: linear-gradient(135deg, #00bcd4 0%, #00acc1 100%);">
+                    <div class="step-number">5</div>
+                    <div class="step-title">Validación</div>
+                    <div class="step-desc">Revisión y corrección de datos</div>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Compromiso Requerido</h3>
+                <p>Designación inmediata del enlace del proyecto • Disponibilidad para reuniones de trabajo • Acceso garantizado a todas las áreas</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Beneficios del Sistema -->
+        <div class="slide">
+            <h2>Beneficios del Sistema de Inventario Digital</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card" style="background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);">
+                    <div class="stat-number">85%</div>
+                    <div class="stat-label">Reducción en tiempo de inventario</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #2196f3 0%, #03a9f4 100%);">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Precisión en el registro</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%);">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Trazabilidad completa</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Disponibilidad del sistema</div>
+                </div>
+            </div>
+            
+            <h3>Ventajas Operativas</h3>
+            <div class="benefit-grid">
+                <div class="benefit-card">
+                    <div class="benefit-title">⚡ Eficiencia Operativa</div>
+                    <ul class="benefit-list">
+                        <li>Eliminación de procesos manuales</li>
+                        <li>Reducción de errores humanos</li>
+                        <li>Actualización instantánea de datos</li>
+                        <li>Generación automática de reportes</li>
+                    </ul>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-title">📊 Control y Gestión</div>
+                    <ul class="benefit-list">
+                        <li>Visibilidad total del inventario</li>
+                        <li>Control de bienes por responsable</li>
+                        <li>Historial completo de movimientos</li>
+                        <li>Evidencia fotográfica de cada bien</li>
+                    </ul>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-title">✅ Cumplimiento Normativo</div>
+                    <ul class="benefit-list">
+                        <li>Preparación para auditorías</li>
+                        <li>Cumplimiento de normativas SSNL</li>
+                        <li>Documentación completa y ordenada</li>
+                        <li>Transparencia en la gestión</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Transformación Digital Real</h3>
+                <p>Un sistema que no solo digitaliza, sino que transforma completamente la gestión de bienes muebles del hospital</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Próximos Pasos -->
+        <div class="slide">
+            <h2>Próximos Pasos - Kick-off del Proyecto</h2>
+            
+            <div class="logo-area">
+                <div class="logo-placeholder">🏥</div>
+                <div style="font-size: 3em;">+</div>
+                <div class="logo-placeholder">📱</div>
+                <div style="font-size: 3em;">=</div>
+                <div class="logo-placeholder">🚀</div>
+            </div>
+            
+            <h3>Acciones Inmediatas Requeridas</h3>
+            <div class="workflow-container" style="margin: 40px 0;">
+                <div class="workflow-step" style="background: linear-gradient(135deg, #2196f3 0%, #03a9f4 100%);">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Enlace del Proyecto</div>
+                    <div class="step-desc">Designación del responsable interno</div>
+                </div>
+                <div class="workflow-step" style="background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%);">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Revisión de Datos</div>
+                    <div class="step-desc">Validación del inventario actual</div>
+                </div>
+                <div class="workflow-step" style="background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Plan de Accesos</div>
+                    <div class="step-desc">Calendario y permisos de áreas</div>
+                </div>
+            </div>
+            
+            <div class="demo-section">
+                <h3 style="text-align: center; color: #2c5364;">Información Crítica para Esta Semana</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px;">
+                    <div style="background: white; padding: 25px; border-radius: 15px; border-left: 5px solid #00d2ff;">
+                        <h4 style="color: #2c5364; margin-bottom: 15px;">📝 Documentación</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">✓ Base de datos actual en Excel</li>
+                            <li style="padding: 8px 0;">✓ Listado de ubicaciones físicas</li>
+                            <li style="padding: 8px 0;">✓ Responsables por área</li>
+                            <li style="padding: 8px 0;">✓ Bienes sin regularizar identificados</li>
+                        </ul>
+                    </div>
+                    <div style="background: white; padding: 25px; border-radius: 15px; border-left: 5px solid #4caf50;">
+                        <h4 style="color: #2c5364; margin-bottom: 15px;">👥 Equipo</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">✓ Enlace designado con autoridad</li>
+                            <li style="padding: 8px 0;">✓ Contactos de cada área</li>
+                            <li style="padding: 8px 0;">✓ Personal de apoyo identificado</li>
+                            <li style="padding: 8px 0;">✓ Horarios de disponibilidad</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight-box" style="background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);">
+                <h3 style="color: white; font-size: 2em;">Iniciamos Hoy la Transformación Digital</h3>
+                <p style="font-size: 1.2em; margin-top: 20px;">
+                    El Hospital Metropolitano será pionero en la gestión digital de inventarios dentro del sistema SSNL
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <p style="font-size: 1.3em; color: #2c5364; font-weight: bold;">¿Preguntas sobre el proceso?</p>
+                <p style="margin-top: 15px; font-size: 1.1em;">Discutamos los detalles y resolvamos todas las dudas</p>
+                <p style="margin-top: 30px; color: #90a4ae;">Kick-off del Proyecto de Inventario Digital</p>
+                <p style="color: #90a4ae;">Hospital Metropolitano - SSNL</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">◀ Anterior</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Siguiente ▶</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            
+            document.getElementById('slideIndicator').textContent = `Diapositiva ${currentSlide + 1} de ${totalSlides}`;
+            
+            // Smooth scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight' && currentSlide < totalSlides - 1) {
+                changeSlide(1);
+            } else if (e.key === 'f' || e.key === 'F') {
+                // Toggle fullscreen
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50 && currentSlide < totalSlides - 1) {
+                changeSlide(1);
+            }
+            if (touchEndX > touchStartX + 50 && currentSlide > 0) {
+                changeSlide(-1);
+            }
+        }
+
+        // Initialize
+        showSlide(0);
+
+        console.log('Presentación cargada. Usa las flechas del teclado para navegar. Presiona F para pantalla completa.');
+    </script>
+</body>
+</html>
